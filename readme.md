@@ -1,10 +1,7 @@
 
 # 🚀 Autodrop - From Frontend to Full-Stack, Instantly
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Try_It_Now-brightgreen?style=for-the-badge&logo=railway)](https://web-production-8db36.up.railway.app)
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/your-template)
-![Node Version](https://img.shields.io/badge/node-18.x-green)
 
 > **Autodrop is an intelligent full-stack automation tool. Upload your frontend code, and it instantly generates a production-ready backend, API, and database. No backend coding required.**
 
@@ -24,7 +21,8 @@
 
 **Live URL:** [https://web-production-8db36.up.railway.app](https://web-production-8db36.up.railway.app)
 
-*(Screenshots of the dashboard and deployed app would be perfect here)*
+<img width="937" height="442" alt="Screenshot 2026-02-17 134204" src="https://github.com/user-attachments/assets/13b48a3f-9b4d-46c0-acda-a903be57cce8" />
+
 
 ---
 
@@ -341,7 +339,7 @@ Copyright (c) 2026 kaya95
 
 ## 📧 **Contact & Social**
 
-**Kaya** - [@yourtwitter](https://twitter.com/yourtwitter) - your.email@example.com
+**Kaya** - [@yourtwitter](https://twitter.com/yourtwitter) - RokaiaAli.official@outlook.com
 
 **Project Link:** [https://github.com/kaya95/Autodrop-SaaS-platform](https://github.com/kaya95/Autodrop-SaaS-platform)
 
@@ -374,3 +372,4 @@ If this project helped you or inspired you, please give it a ⭐ on GitHub! It m
 ---
 
 **Built with ❤️ for developers who hate writing backend code** 🚀
+
