@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - AutoBackend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a202c;
+            color: white;
+        }
+        
+        .navbar {
+            background: #2d3748;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #48bb78;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #a0aec0;
+            text-decoration: none;
+        }
+        
+        .nav-links a:hover {
+            color: white;
+        }
+        
+        .nav-links a.active {
+            color: #48bb78;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+        }
+        
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #2d3748;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #4a5568;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #48bb78;
+        }
+        
+        .stat-label {
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+        
+        .apps-table {
+            background: #2d3748;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #4a5568;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            text-align: left;
+            padding: 15px;
+            background: #4a5568;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #4a5568;
+        }
+        
+        tr:hover {
+            background: #4a5568;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+        }
+        
+        .status-running {
+            background: #48bb78;
+            color: #1a202c;
+        }
+        
+        .status-stopped {
+            background: #a0aec0;
+            color: #1a202c;
+        }
+        
+        .status-failed {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin: 0 4px;
+        }
+        
+        .btn-view {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-stop {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #fc8181;
+            color: white;
+        }
+        
+        .refresh-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #a0aec0;
+        }
+        
+        .user-info {
+            color: #48bb78;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="/" class="logo">AutoBackend<span>.dev</span></a>
+        <div class="nav-links">
+            <a href="/dashboard">My Apps</a>
+            <a href="/admin" class="active">Admin</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>👑 Admin Panel</h1>
+            <button class="refresh-btn" onclick="loadApps()">🔄 Refresh</button>
+        </div>
+        
+        <div class="stats-cards" id="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalApps">-</div>
+                <div class="stat-label">Total Apps</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalUsers">-</div>
+                <div class="stat-label">Users</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRecords">-</div>
+                <div class="stat-label">Database Records</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalStorage">-</div>
+                <div class="stat-label">Storage</div>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">Loading apps...</div>
+        
+        <div class="apps-table" id="appsTable" style="display: none;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>App ID</th>
+                        <th>Owner</th>
+                        <th>Template</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Collections</th>
+                        <th>Records</th>
+                        <th>Size</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="appsBody"></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        let currentUser = null;
+        
+        async function checkAuth() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/';
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!res.ok) {
+                    localStorage.removeItem('token');
+                    window.location.href = '/';
+                    return;
+                }
+                
+                const data = await res.json();
+                currentUser = data.user;
+                
+                if (currentUser.role !== 'admin') {
+                    alert('Admin access required');
+                    window.location.href = '/dashboard';
+                    return;
+                }
+                
+                loadApps();
+            } catch (e) {
+                console.error('Auth error:', e);
+                window.location.href = '/';
+            }
+        }
+        
+        async function loadApps() {
+            const token = localStorage.getItem('token');
+            
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('appsTable').style.display = 'none';
+            
+            try {
+                const res = await fetch('/api/admin/apps', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await res.json();
+                const apps = data.apps || [];
+                
+                renderApps(apps);
+                updateStats(apps);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('appsTable').style.display = 'block';
+            } catch (e) {
+                console.error('Error loading apps:', e);
+                document.getElementById('loading').textContent = 'Error loading apps';
+            }
+        }
+        
+        function renderApps(apps) {
+            const tbody = document.getElementById('appsBody');
+            
+            if (apps.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No apps deployed</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = apps.map(app => `
+                <tr>
+                    <td><code>${app.id.substring(0, 15)}...</code></td>
+                    <td>${app.owner?.email || 'Unknown'}</td>
+                    <td>${app.template || 'N/A'}</td>
+                    <td>
+                        <span class="status-badge status-${app.status || 'stopped'}">
+                            ${app.status || 'stopped'}
+                        </span>
+                    </td>
+                    <td>${app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}</td>
+                    <td>${app.dbStats?.collections || 0}</td>
+                    <td>${app.dbStats?.totalRecords || 0}</td>
+                    <td>${((app.dbStats?.size || 0) / 1024).toFixed(1)}KB</td>
+                    <td>
+                        <button class="btn btn-view" onclick="window.open('${app.url}', '_blank')">Open</button>
+                        <button class="btn btn-stop" onclick="stopApp('${app.id}')">Stop</button>
+                        <button class="btn btn-delete" onclick="deleteApp('${app.id}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updateStats(apps) {
+            document.getElementById('totalApps').textContent = apps.length;
+            
+            const totalRecords = apps.reduce((sum, app) => sum + (app.dbStats?.totalRecords || 0), 0);
+            const totalSize = apps.reduce((sum, app) => sum + (app.dbStats?.size || 0), 0);
+            
+            document.getElementById('totalRecords').textContent = totalRecords;
+            document.getElementById('totalStorage').textContent = (totalSize / 1024).toFixed(1) + 'KB';
+            
+            // Get unique users
+            const uniqueUsers = new Set(apps.map(app => app.owner?.email).filter(Boolean));
+            document.getElementById('totalUsers').textContent = uniqueUsers.size;
+        }
+        
+        async function stopApp(appId) {
+            if (!confirm('Stop this app?')) return;
+            
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/admin/apps/${appId}/stop`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                alert('App stopped');
+                loadApps();
+            } else {
+                const data = await res.json();
+                alert('Error: ' + data.error);
+            }
+        }
+        
+        async function deleteApp(appId) {
+            if (!confirm('⚠️ Permanently delete this app? This cannot be undone.')) return;
+            
+            const token = localStorage.getItem('token');
+            const res = await fetch(`/api/admin/apps/${appId}/delete`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            
+            if (res.ok) {
+                alert('App deleted');
+                loadApps();
+            } else {
+                const data = await res.json();
+                alert('Error: ' + data.error);
+            }
+        }
+        
+        // Check auth on load
+        checkAuth();
+        
+        // Auto refresh every 30 seconds
+        setInterval(loadApps, 30000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "admin1",
+      "email": "admin@autobackend.com",
+      "password": "$2a$10$9FTrdSeGFCyWpFMxUg6wmuv8X8b4VDLe8iENQx2qtWl8rArY8lEnu",
+      "name": "Admin",
+      "role": "admin",
+      "createdAt": "2026-02-16T12:32:08.862Z"
+    },
+    {
+      "id": "b21843c1-77d0-4c67-b668-0bd772b8114d",
+      "email": "fsdfsf@gmail.com",
+      "password": "$2a$10$YfC4eWUT0mxRmNT.RynZ1.Sx7M4M.4S6ilVK.oJGOWAdvQ09UNMim",
+      "name": "dscsdsd",
+      "role": "user",
+      "createdAt": "2026-02-16T12:32:08.941Z"
+    }
+  ]
+}

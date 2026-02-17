@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Test App</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f7fafc;
+        }
+        h1 { color: #2d3748; }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #cbd5e0;
+            border-radius: 4px;
+        }
+        button {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #38a169;
+        }
+        .post {
+            background: #f7fafc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #48bb78;
+        }
+        .post h3 {
+            margin: 0 0 10px 0;
+            color: #2d3748;
+        }
+        .post p {
+            margin: 0;
+            color: #4a5568;
+        }
+        .post small {
+            display: block;
+            margin-top: 10px;
+            color: #718096;
+        }
+        #status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+    </style>
+
+<script>
+(function() {
+  const API_URL = '/api/app_1771250262545_kifj';
+  
+  window.AutoBackend = {
+    api: async (endpoint, options = {}) => {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token ? `Bearer ${token}` : '',
+          ...options.headers
+        }
+      });
+      return res.json();
+    },
+    
+    db: {
+      list: (collection) => window.AutoBackend.api('/' + collection),
+      get: (collection, id) => window.AutoBackend.api('/' + collection + '/' + id),
+      create: (collection, data) => window.AutoBackend.api('/' + collection, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+    }
+  };
+  
+  console.log('✅ AutoBackend connected! App ID: app_1771250262545_kifj');
+})();
+</script>
+
+</head>
+<body>
+    <h1>📝 Test Blog App</h1>
+    
+    <div id="status"></div>
+    
+    <div class="container">
+        <h2>Create New Post</h2>
+        <input type="text" id="title" placeholder="Post title">
+        <textarea id="content" placeholder="Post content" rows="4"></textarea>
+        <button onclick="createPost()">Publish Post</button>
+    </div>
+    
+    <div class="container">
+        <h2>All Posts</h2>
+        <div id="posts">Loading posts...</div>
+    </div>
+    
+    <script>
+        // Show status message
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = type;
+            status.style.display = 'block';
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        // Wait for AutoBackend SDK to load
+        async function init() {
+            console.log('Waiting for AutoBackend...');
+            
+            // Check every second for SDK
+            for(let i = 0; i < 10; i++) {
+                if (window.AutoBackend) {
+                    console.log('✅ AutoBackend found!');
+                    showStatus('✅ Connected to backend!', 'success');
+                    loadPosts();
+                    return;
+                }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+            
+            console.log('❌ AutoBackend not found');
+            document.getElementById('posts').innerHTML = 
+                '<p style="color: red;">Error: Backend not connected. Try refreshing.</p>';
+        }
+        
+        async function loadPosts() {
+            try {
+                const posts = await window.AutoBackend.db.list('posts');
+                const postsDiv = document.getElementById('posts');
+                
+                if (posts.length === 0) {
+                    postsDiv.innerHTML = '<p>No posts yet. Create your first post!</p>';
+                    return;
+                }
+                
+                postsDiv.innerHTML = posts.map(post => `
+                    <div class="post">
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                        <small>Posted: ${new Date(post.createdAt).toLocaleString()}</small>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                document.getElementById('posts').innerHTML = 
+                    `<p style="color: red;">Error loading posts: ${error.message}</p>`;
+            }
+        }
+        
+        async function createPost() {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            
+            if (!title || !content) {
+                showStatus('Please fill in both fields', 'error');
+                return;
+            }
+            
+            try {
+                await window.AutoBackend.db.create('posts', {
+                    title,
+                    content,
+                    author: 'Test User'
+                });
+                
+                document.getElementById('title').value = '';
+                document.getElementById('content').value = '';
+                
+                showStatus('✅ Post created successfully!', 'success');
+                await loadPosts();
+            } catch (error) {
+                console.error('Error creating post:', error);
+                showStatus('❌ Error creating post: ' + error.message, 'error');
+            }
+        }
+        
+        // Start when page loads
+        window.onload = init;
+    </script>
+</body>
+</html>
