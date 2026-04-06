@@ -1,7 +1,7 @@
 
 # 🚀 Autodrop - From Frontend to Full-Stack, Instantly
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_It_Now-brightgreen?style=for-the-badge&logo=railway)](https://web-production-8db36.up.railway.app)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Try_It_Now-brightgreen?style=for-the-badge&logo=railway)](https://autodrop-saas-app.vercel.app/)
 
 > **Autodrop is an intelligent full-stack automation tool. Upload your frontend code, and it instantly generates a production-ready backend, API, and database. No backend coding required.**
 
@@ -10,7 +10,7 @@
 ## ✨ **Live Demo**
 
 <h3 align="center">
-  👉 <a href="https://web-production-8db36.up.railway.app"><strong>🚀 CLICK HERE TO TRY THE LIVE PLATFORM »</strong></a> 👈
+  👉 <a href="https://autodrop-saas-app.vercel.app/"><strong>🚀 CLICK HERE TO TRY THE LIVE PLATFORM »</strong></a> 👈
 </h3>
 
 <p align="center">
@@ -19,7 +19,7 @@
   </a>
 </p>
 
-**Live URL:** [https://web-production-8db36.up.railway.app](https://web-production-8db36.up.railway.app)
+**Live URL:** [https://autodrop-saas-app.vercel.app/](https://autodrop-saas-app.vercel.app/)
 
 <img width="937" height="442" alt="Screenshot 2026-02-17 134204" src="https://github.com/user-attachments/assets/13b48a3f-9b4d-46c0-acda-a903be57cce8" />
 
@@ -364,7 +364,7 @@ If this project helped you or inspired you, please give it a ⭐ on GitHub! It m
 
 <p align="center">
   <b>👇 TRY IT NOW 👇</b><br>
-  <a href="https://web-production-8db36.up.railway.app">
+  <a href="https://autodrop-saas-app.vercel.app/">
     <img src="https://img.shields.io/badge/🚀_LAUNCH_AUTODROP-48bb78?style=for-the-badge&logo=railway&logoColor=white&labelColor=2d3748" alt="Launch" width="400">
   </a>
 </p>
